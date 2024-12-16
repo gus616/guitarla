@@ -1,35 +1,135 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import Header from './components/Header';
+import GuitarList from './components/GuitarList';
+import Footer from './components/Footer';
+import { useEffect, useMemo, useState } from 'react';
 
-function App() {
-  const [count, setCount] = useState(0)
+type product = {
+  id: number;
+  name: string;
+  image: string;
+  description: string;
+  price: number;
+}
+
+function App () {
+  const mockProducts = useMemo(() => [
+    {
+      id: 1,
+      name: 'Lukather',
+      image: 'guitarra_01',
+      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
+      price: 299,
+    },
+    {
+      id: 2,
+      name: 'SRV',
+      image: 'guitarra_02',
+      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
+      price: 349,
+    },
+    {
+      id: 3,
+      name: 'Borland',
+      image: 'guitarra_03',
+      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
+      price: 329,
+    },
+    {
+      id: 4,
+      name: 'VAI',
+      image: 'guitarra_04',
+      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
+      price: 299,
+    },
+    {
+      id: 5,
+      name: 'Thompson',
+      image: 'guitarra_05',
+      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
+      price: 399,
+    },
+    {
+      id: 6,
+      name: 'White',
+      image: 'guitarra_06',
+      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
+      price: 329,
+    },
+    {
+      id: 7,
+      name: 'Cobain',
+      image: 'guitarra_07',
+      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
+      price: 349,
+    },
+    {
+      id: 8,
+      name: 'Dale',
+      image: 'guitarra_08',
+      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
+      price: 379,
+    },
+    {
+      id: 9,
+      name: 'Krieger',
+      image: 'guitarra_09',
+      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
+      price: 289,
+    },
+    {
+      id: 10,
+      name: 'Campbell',
+      image: 'guitarra_10',
+      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
+      price: 349,
+    },
+    {
+      id: 11,
+      name: 'Reed',
+      image: 'guitarra_11',
+      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
+      price: 399,
+    },
+    {
+      id: 12,
+      name: 'Hazel',
+      image: 'guitarra_12',
+      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
+      price: 379,
+    },
+  ], []);
+
+
+  const [data, setData] = useState(mockProducts);
+
+  const [cart, setCart] = useState<product[]>([]);
+
+
+  useEffect(() => {
+    setData(mockProducts);
+  }, [mockProducts]);
+
+
+  function addToCart(item: product) {
+    setCart((prev) => [...prev, item]);
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Header />
+
+      <main className="container-xl mt-5">
+        <h2 className="text-center">Nuestra Colección</h2>
+
+        <div className="row mt-5">
+          <GuitarList products={data} addToCart={addToCart}/>
+        </div>
+      </main>
+
+
+      <Footer />
     </>
   )
 }
 
-export default App
+export default App;
