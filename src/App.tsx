@@ -9,9 +9,10 @@ type product = {
   image: string;
   description: string;
   price: number;
+  quantity?: number;
 }
 
-function App () {
+function App() {
   const mockProducts = useMemo(() => [
     {
       id: 1,
@@ -102,7 +103,13 @@ function App () {
 
   const [data, setData] = useState(mockProducts);
 
-  const [cart, setCart] = useState<product[]>([]);
+  const [cart, setCart] = useState<{
+    products: product[],
+    totalQuantityProducts: number,
+  }>({
+    products: [],
+    totalQuantityProducts: 0,
+  });
 
 
   useEffect(() => {
@@ -111,18 +118,76 @@ function App () {
 
 
   function addToCart(item: product) {
-    setCart((prev) => [...prev, item]);
+    const itemExists = cart.products.find((product: product) => product.id === item.id);
+
+    if (itemExists) {
+      setCart((prevState) => ({
+        products: prevState.products.map((product: product) => {
+          if (product.id === item.id) {
+            return {
+              ...product,
+              quantity: product.quantity ? product.quantity + 1 : 1,
+            };
+          }
+          return product;
+        }),
+        totalQuantityProducts: prevState.totalQuantityProducts + 1,
+      }));
+    } else {
+      setCart((prevState) => ({
+        products: [...prevState.products, { ...item, quantity: 1 }],
+        totalQuantityProducts: prevState.totalQuantityProducts + 1,
+      }));
+    }
   };
+
+  function decreaseProduct(itemId: number) {
+    const itemExists = cart.products.find((product: product) => product.id === itemId);
+
+    if (itemExists !== undefined && itemExists.quantity === 1) {
+      deleteProduct(itemId);
+    }
+
+    if (itemExists) {
+      setCart((prevState) => ({
+        products: prevState.products.map((product: product) => {
+          if (product.id === itemId) {
+            return {
+              ...product,
+              quantity: product.quantity ? product.quantity - 1 : 0,
+            };
+          }
+          return product;
+        }),
+        totalQuantityProducts: prevState.totalQuantityProducts - 1,
+      }));
+    }
+  }
+
+  function deleteProduct(id: number) {
+
+    setCart((prevState) => ({
+      products: prevState.products.filter((product: product) => product.id !== id),
+      totalQuantityProducts: prevState.totalQuantityProducts - (prevState.products.find((product: product) => product.id === id)?.quantity || 0),
+    }));
+  }
+
+  function deleteCart() {
+    setCart({
+      products: [],
+      totalQuantityProducts: 0,
+    })
+  }
 
   return (
     <>
-      <Header />
+      <Header cart={cart} increaseProduct={addToCart} decreaseProduct={decreaseProduct} deleteProduct={deleteProduct} deleteCart={deleteCart}/>
 
       <main className="container-xl mt-5">
         <h2 className="text-center">Nuestra Colección</h2>
 
         <div className="row mt-5">
-          <GuitarList products={data} addToCart={addToCart}/>
+          <GuitarList products={data} addToCart={addToCart} />
         </div>
       </main>
 

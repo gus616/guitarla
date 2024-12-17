@@ -1,4 +1,44 @@
-const Header = () => {
+
+
+
+type product = {
+  id: number;
+  name: string;
+  image: string;
+  description: string;
+  price: number;
+  quantity?: number;
+}
+
+type Props = {
+  cart: {
+    products: product[],
+    totalQuantityProducts: number,
+  },
+  increaseProduct: (item: product) => void,
+  decreaseProduct: (itemId: number) => void,
+  deleteProduct: (itemId: number) => void,
+  deleteCart: () => void,
+}
+
+const Header = ({ cart, increaseProduct, decreaseProduct, deleteProduct, deleteCart }: Props) => {
+
+  const decreaseProductQuantityHandler = (id: number) => {
+    decreaseProduct(id);
+  }
+
+  const increaseProductQuantityHandler = (item: product) => {
+    increaseProduct(item)
+  }
+
+  const deleteProductHandler = (id: number) => {
+    deleteProduct(id);
+  }
+
+  const deleteCartHandler = () => {
+    deleteCart();
+  }
+
   return (
     <header className="py-5 header">
       <div className="container-xl">
@@ -21,8 +61,8 @@ const Header = () => {
               />
 
               <div id="carrito" className="bg-white p-3">
-                <p className="text-center">El carrito esta vacio</p>
-                <table className="w-100 table">
+                {cart.products.length < 1 && <p className="text-center">El carrito esta vacio</p>}
+                {cart.products.length > 0 && <table className="w-100 table">
                   <thead>
                     <tr>
                       <th>Imagen</th>
@@ -33,38 +73,49 @@ const Header = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>
-                        <img
-                          className="img-fluid"
-                          src="../public/img/guitarra_02.jpg"
-                          alt="imagen guitarra"
-                        />
-                      </td>
-                      <td>SRV</td>
-                      <td className="fw-bold">$299</td>
-                      <td className="flex align-items-start gap-4">
-                        <button type="button" className="btn btn-dark">
-                          -
-                        </button>
-                        1
-                        <button type="button" className="btn btn-dark">
-                          +
-                        </button>
-                      </td>
-                      <td>
-                        <button className="btn btn-danger" type="button">
-                          X
-                        </button>
-                      </td>
-                    </tr>
+                    {
+                      cart.products.map((item: product) => (
+                        <tr key={item.id}>
+                          <td>
+                            <img
+                              className="img-fluid"
+                              src={`../public/img/guitarra_${item.id < 10 ? '0' + item.id : item.id}.jpg`}
+                              alt={item.name}
+                            />
+                          </td>
+                          <td>{item.name}</td>
+                          <td className="fw-bold">${item.price}</td>
+                          <td className="flex align-items-start gap-4">
+                            <button type="button" className="btn btn-dark" onClick={() => decreaseProductQuantityHandler(item.id)}>
+                              -
+                            </button>
+                            {item.quantity}
+                            <button type="button" className="btn btn-dark" onClick={() => increaseProductQuantityHandler(item)}>
+                              +
+                            </button>
+                          </td>
+                          <td>
+                            <button className="btn btn-danger" type="button" onClick={() => deleteProductHandler(item.id)}>
+                              X
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    }
+
                   </tbody>
-                </table>
+                </table> }
 
                 <p className="text-end">
-                  Total pagar: <span className="fw-bold">$899</span>
+                  Total de productos : {cart.totalQuantityProducts < 0 ? 0 : cart.totalQuantityProducts}
                 </p>
-                <button className="btn btn-dark w-100 mt-3 p-2">
+
+                <p className="text-end">
+                  Total pagar: <span className="fw-bold">${
+                    cart.products.reduce((total, item) => total + (item.price * (item.quantity ?? 0)), 0)
+                  }</span>
+                </p>
+                <button className="btn btn-dark w-100 mt-3 p-2" onClick={deleteCartHandler} disabled={cart.products.length === 0}>
                   Vaciar Carrito
                 </button>
               </div>
