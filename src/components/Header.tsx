@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 
 
 
@@ -22,6 +23,9 @@ type Props = {
 }
 
 const Header = ({ cart, increaseProduct, decreaseProduct, deleteProduct, deleteCart }: Props) => {
+
+  const cartTotal = useMemo(() => cart.products.reduce((total, item) => total + (item.price * (item.quantity ?? 0)), 0), [cart]);
+
 
   const decreaseProductQuantityHandler = (id: number) => {
     decreaseProduct(id);
@@ -104,7 +108,7 @@ const Header = ({ cart, increaseProduct, decreaseProduct, deleteProduct, deleteC
                     }
 
                   </tbody>
-                </table> }
+                </table>}
 
                 <p className="text-end">
                   Total de productos : {cart.totalQuantityProducts < 0 ? 0 : cart.totalQuantityProducts}
@@ -112,7 +116,7 @@ const Header = ({ cart, increaseProduct, decreaseProduct, deleteProduct, deleteC
 
                 <p className="text-end">
                   Total pagar: <span className="fw-bold">${
-                    cart.products.reduce((total, item) => total + (item.price * (item.quantity ?? 0)), 0)
+                    cartTotal
                   }</span>
                 </p>
                 <button className="btn btn-dark w-100 mt-3 p-2" onClick={deleteCartHandler} disabled={cart.products.length === 0}>

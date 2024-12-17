@@ -103,18 +103,31 @@ function App() {
 
   const [data, setData] = useState(mockProducts);
 
+  const initialCart = () => {
+    const localStorageCart = localStorage.getItem('cart');
+
+    return localStorageCart ? JSON.parse(localStorageCart) : {
+      products: [],
+      totalQuantityProducts: 0
+    }
+  }
+
   const [cart, setCart] = useState<{
     products: product[],
     totalQuantityProducts: number,
-  }>({
-    products: [],
-    totalQuantityProducts: 0,
-  });
+  }>(initialCart);
 
 
   useEffect(() => {
     setData(mockProducts);
   }, [mockProducts]);
+
+
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart])
+
+
 
 
   function addToCart(item: product) {
@@ -181,7 +194,7 @@ function App() {
 
   return (
     <>
-      <Header cart={cart} increaseProduct={addToCart} decreaseProduct={decreaseProduct} deleteProduct={deleteProduct} deleteCart={deleteCart}/>
+      <Header cart={cart} increaseProduct={addToCart} decreaseProduct={decreaseProduct} deleteProduct={deleteProduct} deleteCart={deleteCart} />
 
       <main className="container-xl mt-5">
         <h2 className="text-center">Nuestra Colección</h2>
