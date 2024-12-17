@@ -28,7 +28,7 @@ const GuitarItem = ({ product, addToCart }: Props) => {
       <div className="col-4">
         <img
           className="img-fluid"
-          src={`/public/img/guitarra_${product.id < 10 ? '0' + product.id : product.id}.jpg`}
+          src={`img/guitarra_${product.id < 10 ? '0' + product.id : product.id}.jpg`}
           alt="imagen guitarra"
         />
       </div>
