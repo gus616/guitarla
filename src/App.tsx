@@ -2,7 +2,6 @@ import Header from './components/Header';
 import GuitarList from './components/GuitarList';
 import Footer from './components/Footer';
 import { useEffect, useMemo, useState } from 'react';
-
 type product = {
   id: number;
   name: string;
@@ -202,7 +201,15 @@ function App() {
         <div className="row mt-5">
           <GuitarList products={data} addToCart={addToCart} />
         </div>
+        <button
+          className="go-up-btn"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        >
+          Go Up
+        </button>
+
       </main>
+
 
 
       <Footer />
