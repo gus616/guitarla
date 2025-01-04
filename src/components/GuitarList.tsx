@@ -1,13 +1,5 @@
 import GuitarItem from "./GuitarItem"
-
-
-type product = {
-    id: number;
-    name: string;
-    image: string;
-    description: string;
-    price: number;
-}
+import { product } from "../types"
 
 type Props = {
     products: product[],
@@ -15,19 +7,19 @@ type Props = {
 }
 
 
-const GuitarList = ({products, addToCart}: Props) => {
+const GuitarList = ({ products, addToCart }: Props) => {
 
-  if(products?.length === 0) return <p>No hay productos para mostrar.</p>
+    if (products?.length === 0) return <p>No hay productos para mostrar.</p>
 
-  return (
-    (
-        <>
-            {products.map((product: product) => (
-                <GuitarItem key={product.id} product={product} addToCart={addToCart} />
-            ))}
-        </>
+    return (
+        (
+            <>
+                {products.map((product: product) => (
+                    <GuitarItem key={product.id} product={product} addToCart={addToCart} />
+                ))}
+            </>
+        )
     )
-  )
 }
 
 export default GuitarList

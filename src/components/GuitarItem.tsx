@@ -1,25 +1,6 @@
+import { GuitarItemProps, product } from "../types";
 
-
-type Props = {
-  product: {
-    id: number;
-    name: string;
-    image: string;
-    description: string;
-    price: number;
-  },
-  addToCart: (item: product) => void;
-}
-
-type product = {
-  id: number;
-  name: string;
-  image: string;
-  description: string;
-  price: number;
-}
-
-const GuitarItem = ({ product, addToCart }: Props) => {
+const GuitarItem = ({ product, addToCart }: GuitarItemProps) => {
   const handleAddToCart = (item: product) => {
     addToCart(item);
   };

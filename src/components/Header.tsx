@@ -1,15 +1,5 @@
 import { useMemo } from "react";
-
-
-
-type product = {
-  id: number;
-  name: string;
-  image: string;
-  description: string;
-  price: number;
-  quantity?: number;
-}
+import type { product } from "../types";
 
 type Props = {
   cart: {
