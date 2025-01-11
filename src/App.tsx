@@ -1,124 +1,38 @@
 import Header from './components/Header';
 import GuitarList from './components/GuitarList';
 import Footer from './components/Footer';
-import { useEffect, useMemo, useState } from 'react';
-import useCart from './hooks/useCart.ts'
+import { useEffect, useReducer } from 'react';
+import { cartReducer, initialState } from './reducers/cart-reducer.ts';
 
 function App() {
-  const mockProducts = useMemo(() => [
-    {
-      id: 1,
-      name: 'Lukather',
-      image: 'guitarra_01',
-      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
-      price: 299,
-    },
-    {
-      id: 2,
-      name: 'SRV',
-      image: 'guitarra_02',
-      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
-      price: 349,
-    },
-    {
-      id: 3,
-      name: 'Borland',
-      image: 'guitarra_03',
-      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
-      price: 329,
-    },
-    {
-      id: 4,
-      name: 'VAI',
-      image: 'guitarra_04',
-      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
-      price: 299,
-    },
-    {
-      id: 5,
-      name: 'Thompson',
-      image: 'guitarra_05',
-      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
-      price: 399,
-    },
-    {
-      id: 6,
-      name: 'White',
-      image: 'guitarra_06',
-      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
-      price: 329,
-    },
-    {
-      id: 7,
-      name: 'Cobain',
-      image: 'guitarra_07',
-      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
-      price: 349,
-    },
-    {
-      id: 8,
-      name: 'Dale',
-      image: 'guitarra_08',
-      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
-      price: 379,
-    },
-    {
-      id: 9,
-      name: 'Krieger',
-      image: 'guitarra_09',
-      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
-      price: 289,
-    },
-    {
-      id: 10,
-      name: 'Campbell',
-      image: 'guitarra_10',
-      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
-      price: 349,
-    },
-    {
-      id: 11,
-      name: 'Reed',
-      image: 'guitarra_11',
-      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
-      price: 399,
-    },
-    {
-      id: 12,
-      name: 'Hazel',
-      image: 'guitarra_12',
-      description: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
-      price: 379,
-    },
-  ], []);
+  const [state, dispatch] = useReducer(cartReducer, initialState);
 
-
-  const [data, setData] = useState(mockProducts);
-
-  const { cart,
+/*   const { cart,
     addToCart,
     decreaseProduct,
     deleteProduct,
-    deleteCart } = useCart();
+    deleteCart } = useCart(); */
 
-  useEffect(() => {
-    setData(mockProducts);
-  }, [mockProducts]);
-
-
-  useEffect(() => {
+/*   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart));
-  }, [cart])
+  }, [cart]) */
+
+
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(state.cart));
+  }, [state.cart])
+  
+  
 
   return (
     <>
-      <Header cart={cart} increaseProduct={addToCart} decreaseProduct={decreaseProduct} deleteProduct={deleteProduct} deleteCart={deleteCart} />
+      <Header state={state} dispatch={dispatch} />
 
       <main className="container-xl mt-5">
         <h2 className="text-center">Nuestra Colección</h2>
 
         <div className="row mt-5">
-          <GuitarList products={data} addToCart={addToCart} />
+          <GuitarList products={state.products} dispatch={dispatch}/>
         </div>
         <button
           className="go-up-btn"
@@ -126,11 +40,7 @@ function App() {
         >
           Go Up
         </button>
-
       </main>
-
-
-
       <Footer />
     </>
   )

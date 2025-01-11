@@ -1,9 +1,17 @@
-import { GuitarItemProps, product } from "../types";
+import { CartActions } from "../reducers/cart-reducer";
 
-const GuitarItem = ({ product, addToCart }: GuitarItemProps) => {
-  const handleAddToCart = (item: product) => {
-    addToCart(item);
-  };
+ type GuitarItemProps = {
+  product: {
+    id: number;
+    name: string;
+    image: string;
+    description: string;
+    price: number;
+  },
+  dispatch: React.Dispatch<CartActions>
+}
+
+const GuitarItem = ({ product , dispatch}: GuitarItemProps) => {
   return (
     <div className="col-md-6 col-lg-4 my-4 row align-items-center">
       <div className="col-4">
@@ -19,7 +27,12 @@ const GuitarItem = ({ product, addToCart }: GuitarItemProps) => {
           {product.description}
         </p>
         <p className="fw-black text-primary fs-3">${product.price}</p>
-        <button type="button" className="btn btn-dark w-100" onClick={() => handleAddToCart(product)}>
+        <button type="button" className="btn btn-dark w-100" onClick={() => dispatch({
+          type: 'add-to-cart',
+          payload: {
+            item: product
+          }
+        })}>
           Agregar al Carrito
         </button>
       </div>

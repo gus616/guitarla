@@ -1,13 +1,14 @@
 import GuitarItem from "./GuitarItem"
 import { product } from "../types"
+import { CartActions } from "../reducers/cart-reducer"
 
 type Props = {
     products: product[],
-    addToCart: (item: product) => void;
+    dispatch: React.Dispatch<CartActions>
 }
 
 
-const GuitarList = ({ products, addToCart }: Props) => {
+const GuitarList = ({ products, dispatch }: Props) => {
 
     if (products?.length === 0) return <p>No hay productos para mostrar.</p>
 
@@ -15,7 +16,7 @@ const GuitarList = ({ products, addToCart }: Props) => {
         (
             <>
                 {products.map((product: product) => (
-                    <GuitarItem key={product.id} product={product} addToCart={addToCart} />
+                    <GuitarItem key={product.id} product={product} dispatch={dispatch} />
                 ))}
             </>
         )

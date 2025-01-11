@@ -1,36 +1,54 @@
 import { useMemo } from "react";
 import type { product } from "../types";
+import { CartActions } from "../reducers/cart-reducer";
 
 type Props = {
-  cart: {
+  state: {
     products: product[],
-    totalQuantityProducts: number,
+    cart: product[],
   },
-  increaseProduct: (item: product) => void,
-  decreaseProduct: (itemId: number) => void,
-  deleteProduct: (itemId: number) => void,
-  deleteCart: () => void,
+  dispatch: React.Dispatch<CartActions>
 }
 
-const Header = ({ cart, increaseProduct, decreaseProduct, deleteProduct, deleteCart }: Props) => {
+const Header = ({ state, dispatch }: Props) => {
 
-  const cartTotal = useMemo(() => cart.products.reduce((total, item) => total + (item.price * (item.quantity ?? 0)), 0), [cart]);
+  const cartTotal = useMemo(() => state.cart.reduce((total, item) => total + (item.price * (item.quantity ?? 0)), 0), [state.cart]);
+
+  const totalQuantityProducts = useMemo(() => state.cart.reduce((total, item) => total + (item.quantity ?? 0), 0), [state.cart]);
 
 
   const decreaseProductQuantityHandler = (id: number) => {
-    decreaseProduct(id);
+    dispatch({
+      type: 'decrease-quantity',
+      payload: {
+        id: id
+      }
+    })
   }
 
   const increaseProductQuantityHandler = (item: product) => {
-    increaseProduct(item)
+
+    dispatch({
+      type: 'increase-quantity',
+      payload: {
+        id: item.id
+      }
+    })
   }
 
   const deleteProductHandler = (id: number) => {
-    deleteProduct(id);
+    dispatch({
+      type: 'remove-from-cart',
+      payload: {
+        id: id
+      }
+    })
   }
 
   const deleteCartHandler = () => {
-    deleteCart();
+    dispatch({
+      type: 'clear-cart'
+    })
   }
 
   return (
@@ -55,8 +73,8 @@ const Header = ({ cart, increaseProduct, decreaseProduct, deleteProduct, deleteC
               />
 
               <div id="carrito" className="bg-white p-3">
-                {cart.products.length < 1 && <p className="text-center">El carrito esta vacio</p>}
-                {cart.products.length > 0 && <table className="w-100 table">
+                {state.cart.length < 1 && <p className="text-center">El carrito esta vacio</p>}
+                {state.cart.length > 0 && <table className="w-100 table">
                   <thead>
                     <tr>
                       <th>Imagen</th>
@@ -68,7 +86,7 @@ const Header = ({ cart, increaseProduct, decreaseProduct, deleteProduct, deleteC
                   </thead>
                   <tbody>
                     {
-                      cart.products.map((item: product) => (
+                      state.cart.map((item: product) => (
                         <tr key={item.id}>
                           <td>
                             <img
@@ -101,7 +119,7 @@ const Header = ({ cart, increaseProduct, decreaseProduct, deleteProduct, deleteC
                 </table>}
 
                 <p className="text-end">
-                  Total de productos : {cart.totalQuantityProducts < 0 ? 0 : cart.totalQuantityProducts}
+                  Total de productos : {totalQuantityProducts < 0 ? 0 : totalQuantityProducts}
                 </p>
 
                 <p className="text-end">
@@ -109,7 +127,7 @@ const Header = ({ cart, increaseProduct, decreaseProduct, deleteProduct, deleteC
                     cartTotal
                   }</span>
                 </p>
-                <button className="btn btn-dark w-100 mt-3 p-2" onClick={deleteCartHandler} disabled={cart.products.length === 0}>
+                <button className="btn btn-dark w-100 mt-3 p-2" onClick={deleteCartHandler} disabled={state.cart.length === 0}>
                   Vaciar Carrito
                 </button>
               </div>
